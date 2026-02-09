@@ -1,2 +1,1 @@
-venue dataset = orginal shape --> (3684,10)
-
+# EVENT_MANAGEMENT_capstone_project
