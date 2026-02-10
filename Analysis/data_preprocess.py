@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
 
-# -----------------------------
-# STEP 1: Load data
-# -----------------------------
+#Loading data
+
 df = pd.read_csv("D:/EM_38/data/Venue_master.csv")
 
-# -----------------------------
-# STEP 2: Normalize column names
-# -----------------------------
+
+#Normalizing column names
+
 df.columns = (
     df.columns
     .str.strip()
@@ -16,18 +15,17 @@ df.columns = (
     .str.replace(" ", "_")
 )
 
-# -----------------------------
-# STEP 3: Normalize text columns
-# -----------------------------
+
+#Normalizing text columns
+
 text_cols = ["listing_type", "venue_space_type", "city", "location"]
 
 for col in text_cols:
     if col in df.columns:
         df[col] = df[col].astype(str).str.lower().str.strip()
 
-# -----------------------------
-# STEP 4: Clean price columns
-# -----------------------------
+
+#Cleanning price columns
 for col in ["price", "initial_price"]:
     df[col] = (
         df[col]
@@ -38,34 +36,29 @@ for col in ["price", "initial_price"]:
     )
     df[col] = pd.to_numeric(df[col], errors="coerce")
 
-# -----------------------------
-# STEP 5: Rating cleanup
-# -----------------------------
+#Rating cleanup
+
 df["rating"] = pd.to_numeric(df["rating"], errors="coerce").clip(0, 5)
 
-# -----------------------------
-# STEP 6: ENTITY SEGREGATION (FINAL & CORRECT)
-# -----------------------------
+#ENTITY SEGREGATION (FINAL & CORRECT)
+
 venues_df = df[df["listing_type"] == "banquet-halls"].copy()
 vendors_df = df[df["listing_type"] != "banquet-halls"].copy()
 
-# -----------------------------
-# STEP 7: Drop irrelevant columns
-# -----------------------------
+#Dropping irrelevant columns
 vendors_df = vendors_df.drop(columns=["venue_space_type"], errors="ignore")
 
-# -----------------------------
-# STEP 8: Generate IDs
-# -----------------------------
+
+#Generating IDs
 venues_df = venues_df.reset_index(drop=True)
 vendors_df = vendors_df.reset_index(drop=True)
 
 venues_df["venue_id"] = venues_df.index.map(lambda x: f"DLV_{x+1:06d}")
 vendors_df["vendor_id"] = vendors_df.index.map(lambda x: f"VND_{x+1:06d}")
 
-# -----------------------------
-# STEP 9: Handle missing values
-# -----------------------------
+
+#Handling missing values
+
 venues_df = venues_df.dropna(subset=["name"])
 vendors_df = vendors_df.dropna(subset=["name"])
 
@@ -80,9 +73,9 @@ for col in ["description", "location", "city"]:
     if col in vendors_df.columns:
         vendors_df[col] = vendors_df[col].fillna("")
 
-# -----------------------------
-# STEP 10: Final column ordering
-# -----------------------------
+
+#Final column ordering
+
 venues_columns = [
     "venue_id", "name", "venue_space_type", "location", "city",
     "price", "initial_price", "rating", "description", "image_link"
@@ -96,9 +89,7 @@ vendors_columns = [
 venues_df = venues_df[venues_columns]
 vendors_df = vendors_df[vendors_columns]
 
-# -----------------------------
-# STEP 11: Export
-# -----------------------------
+#Exporting files
 venues_df.to_csv("venues_db_ready.csv", index=False)
 vendors_df.to_csv("vendors_db_ready.csv", index=False)
 
