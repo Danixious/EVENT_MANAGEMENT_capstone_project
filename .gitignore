@@ -1,2 +1,3 @@
 data/*.csv
 *.csv
+model/event_plan_model.pkl

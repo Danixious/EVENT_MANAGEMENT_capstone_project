@@ -1,1 +1,2 @@
-\copy venues(name, venue_space_type, location, city, price, initial_price, rating, description, image_link)FROM 'D:/EM_38/data/venues_db_ready.csv'DELIMITER ','CSV HEADER;
+-- import vendors
+\copy vendors(name, listing_type, location, city, price, initial_price, rating, description, image_link) FROM 'D:/EM_38/data/vendors_utf8.csv' DELIMITER ',' CSV HEADER ENCODING 'WIN1252';
