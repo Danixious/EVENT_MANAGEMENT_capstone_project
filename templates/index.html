@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}EventIQ — Smart Event Planner for Dehradun{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ═══════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid-lines"></div>
+
+    <div class="hero-body">
+        <div class="hero-text">
+            <div class="hero-pill">📍 Dehradun, Uttarakhand</div>
+            <h1 class="hero-h1">
+                Plan your event.<br>
+                <em>The smart way.</em>
+            </h1>
+            <p class="hero-p">
+                From weddings in Vasant Vihar to college fests on Rajpur Road — EventIQ gives you
+                data-driven venue suggestions, budget plans, attendance predictions and risk
+                alerts, all tuned to Dehradun's unique landscape.
+            </p>
+            <div class="hero-btns">
+                <a href="{{ url_for('plan') }}" class="btn-primary">Plan My Event →</a>
+                <a href="#how-it-works" class="btn-outline">How it works</a>
+            </div>
+            <div class="hero-numbers">
+                <div class="hn-item"><strong>15+</strong><span>Localities</span></div>
+                <div class="hn-sep"></div>
+                <div class="hn-item"><strong>8</strong><span>Event Types</span></div>
+                <div class="hn-sep"></div>
+                <div class="hn-item"><strong>40+</strong><span>Venues</span></div>
+            </div>
+        </div>
+
+        <div class="hero-visual-col">
+            <div class="hero-card-cluster">
+                <div class="hc-card hc-venue">
+                    <div class="hc-icon">🏛️</div>
+                    <div>
+                        <strong>Grand Legacy Banquet</strong>
+                        <span>Race Course · ★ 4.5 · 600 capacity</span>
+                    </div>
+                </div>
+                <div class="hc-card hc-budget">
+                    <div class="hc-icon">💰</div>
+                    <div>
+                        <strong>Budget Optimised</strong>
+                        <span>₹1,20,000 split across 5 heads</span>
+                    </div>
+                    <div class="hc-bar-wrap">
+                        <div class="hc-bar" style="--w:30%;--c:#e8b86d">Venue 30%</div>
+                        <div class="hc-bar" style="--w:35%;--c:#6ab187">Catering 35%</div>
+                        <div class="hc-bar" style="--w:15%;--c:#7fabd4">Decor 15%</div>
+                    </div>
+                </div>
+                <div class="hc-card hc-weather">
+                    <div class="hc-icon">🌤️</div>
+                    <div>
+                        <strong>October — Ideal Season</strong>
+                        <span>Pleasant · Low risk · High turnout</span>
+                    </div>
+                </div>
+                <div class="hc-card hc-attend">
+                    <div class="hc-icon">👥</div>
+                    <div>
+                        <strong>Predicted Attendance</strong>
+                        <span>186 / 200 invited · 93% confidence</span>
+                    </div>
+                </div>
+                <div class="hero-mountain-wrap">
+                    <img src="{{ url_for('static', filename='images/hero-illustration.svg') }}" alt="Dehradun valley illustration" class="hero-mountain-img">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ EVENT TYPE CHIPS ═══════════════════════════════════════════════════════ -->
+<section class="chips-section">
+    <div class="chips-inner">
+        <span class="chip">💍 Weddings</span>
+        <span class="chip">🎓 College Fests</span>
+        <span class="chip">💼 Corporate Conferences</span>
+        <span class="chip">🎂 Birthday Parties</span>
+        <span class="chip">🎭 Cultural Programs</span>
+        <span class="chip">⚽ Sports Events</span>
+        <span class="chip">🛍️ Trade Fairs</span>
+        <span class="chip">📚 Seminars</span>
+    </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══════════════════════════════════════════════════════════ -->
+<section class="section hiw-section" id="how-it-works">
+    <div class="section-wrap">
+        <div class="section-head">
+            <span class="section-tag">Process</span>
+            <h2>From idea to event plan<br><em>in under 2 minutes.</em></h2>
+            <p>Fill the form — our engine does the rest.</p>
+        </div>
+        <div class="steps-row">
+            <div class="step-card">
+                <div class="step-num">01</div>
+                <div class="step-ico">📝</div>
+                <h3>Fill the Brief</h3>
+                <p>Share your event type, guest count, budget, month and Dehradun locality.</p>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+                <div class="step-num">02</div>
+                <div class="step-ico">🧠</div>
+                <h3>Smart Analysis</h3>
+                <p>Our engine cross-references seasonal data, locality profiles and venue database.</p>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+                <div class="step-num">03</div>
+                <div class="step-ico">📊</div>
+                <h3>Get Insights</h3>
+                <p>Receive venue picks, budget split, attendance forecast and risk flags.</p>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+                <div class="step-num">04</div>
+                <div class="step-ico">🚀</div>
+                <h3>Plan with Confidence</h3>
+                <p>Use expert tips and data-backed decisions to execute a flawless event.</p>
+            </div>
+        </div>
+        <div style="text-align:center;margin-top:3rem">
+            <a href="{{ url_for('plan') }}" class="btn-primary">Try It Now →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ══ FEATURES ══════════════════════════════════════════════════════════════ -->
+<section class="section features-section" id="features">
+    <div class="section-wrap">
+        <div class="section-head">
+            <span class="section-tag">Features</span>
+            <h2>Everything you need<br><em>to plan right.</em></h2>
+        </div>
+        <div class="feat-grid">
+            <div class="feat-card feat-wide">
+                <div class="feat-no">01</div>
+                <div class="feat-ico">🗺️</div>
+                <h3>Locality-Aware Venue Matching</h3>
+                <p>We profile each of Dehradun's 15 major areas — traffic density, cultural vibe, venue landscape — and match you with venues that truly fit your event's character, not just its capacity.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-no">02</div>
+                <div class="feat-ico">💸</div>
+                <h3>Intelligent Budget Split</h3>
+                <p>Automatically divides your budget across venue, catering, décor, entertainment and logistics based on event-type industry norms.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-no">03</div>
+                <div class="feat-ico">📈</div>
+                <h3>Attendance Predictor</h3>
+                <p>Estimates real turnout using seasonal patterns, locality factors and event-type crowd behaviour specific to Dehradun.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-no">04</div>
+                <div class="feat-ico">⚠️</div>
+                <h3>Risk Alert System</h3>
+                <p>Flags weather risks, budget stress, crowd management needs and peak-season booking urgency before they become real problems.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-no">05</div>
+                <div class="feat-ico">🌦️</div>
+                <h3>12-Month Seasonal Calendar</h3>
+                <p>Month-by-month weather and crowd data for Dehradun tells you the best time to host your specific event type.</p>
+            </div>
+            <div class="feat-card feat-wide">
+                <div class="feat-no">06</div>
+                <div class="feat-ico">💡</div>
+                <h3>Curated Local Recommendations</h3>
+                <p>Expert tips on Dehradun caterers, décor trends, marketing channels and an actionable checklist — tailored to your event, audience and season. No generic advice, only locally relevant insights.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ LOCALITIES ════════════════════════════════════════════════════════════ -->
+<section class="section localities-section" id="localities">
+    <div class="section-wrap">
+        <div class="section-head">
+            <span class="section-tag">Coverage</span>
+            <h2>Every corner of<br><em>Dehradun covered.</em></h2>
+            <p>We know the vibe, traffic and venue landscape of each neighbourhood.</p>
+        </div>
+        <div class="loc-grid">
+            <div class="loc-card" style="--ac:#e8b86d">
+                <span class="loc-em">🏙️</span>
+                <strong>Rajpur Road</strong>
+                <em>Upscale · Premium venues</em>
+            </div>
+            <div class="loc-card" style="--ac:#6ab187">
+                <span class="loc-em">🏔️</span>
+                <strong>Mussoorie Road</strong>
+                <em>Scenic · Resort events</em>
+            </div>
+            <div class="loc-card" style="--ac:#7fabd4">
+                <span class="loc-em">💦</span>
+                <strong>Sahastradhara</strong>
+                <em>Scenic · Nature settings</em>
+            </div>
+            <div class="loc-card" style="--ac:#b98eca">
+                <span class="loc-em">🌿</span>
+                <strong>Vasant Vihar</strong>
+                <em>Premium · Lawn events</em>
+            </div>
+            <div class="loc-card" style="--ac:#e07a5f">
+                <span class="loc-em">🕰️</span>
+                <strong>Clock Tower</strong>
+                <em>Central · Heritage</em>
+            </div>
+            <div class="loc-card" style="--ac:#52b788">
+                <span class="loc-em">🏘️</span>
+                <strong>Clement Town</strong>
+                <em>Community · Affordable</em>
+            </div>
+            <div class="loc-card" style="--ac:#457b9d">
+                <span class="loc-em">🛣️</span>
+                <strong>ISBT Area</strong>
+                <em>Transit · Accessible</em>
+            </div>
+            <div class="loc-card" style="--ac:#f4a261">
+                <span class="loc-em">🏡</span>
+                <strong>Ballupur</strong>
+                <em>Commercial · Mixed</em>
+            </div>
+            <div class="loc-card loc-card--plus" style="--ac:#888">
+                <span class="loc-em">➕</span>
+                <strong>7 More Areas</strong>
+                <em>Prem Nagar, Race Course, GMS Road &amp; more</em>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ CTA BANNER ════════════════════════════════════════════════════════════ -->
+<section class="cta-banner">
+    <div class="cta-inner">
+        <h2>Ready to plan your next event<br>in Dehradun?</h2>
+        <p>It's free, takes 2 minutes and gives you a full professional event plan.</p>
+        <a href="{{ url_for('plan') }}" class="btn-primary btn-lg">Start Planning for Free →</a>
+    </div>
+    <div class="cta-glow"></div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

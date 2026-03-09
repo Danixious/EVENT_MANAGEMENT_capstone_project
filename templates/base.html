@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EventIQ — Smart Event Planner, Dehradun{% endblock %}</title>
+    <meta name="description" content="AI-powered event planning for Dehradun. Budget optimization, venue recommendations & attendance predictions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+    <div class="nav-wrap">
+        <a href="{{ url_for('index') }}" class="nav-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="28" height="28" rx="8" fill="#1a1a2e"/>
+                <path d="M7 14L14 7L21 14L14 21L7 14Z" fill="#e8b86d" opacity="0.9"/>
+                <circle cx="14" cy="14" r="3" fill="#1a1a2e"/>
+            </svg>
+            <span class="logo-name">EventIQ</span>
+            <span class="logo-city">Dehradun</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}is-active{% endif %}">Home</a>
+            <a href="{{ url_for('plan') }}" class="nav-link {% if request.endpoint == 'plan' %}is-active{% endif %}">Plan Event</a>
+            <a href="{{ url_for('index') }}#features" class="nav-link">Features</a>
+            <a href="{{ url_for('index') }}#localities" class="nav-link">Localities</a>
+        </div>
+        <a href="{{ url_for('plan') }}" class="btn-nav">Start Planning</a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<main class="page-main">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+    <div class="footer-wrap">
+        <div class="footer-col">
+            <a href="{{ url_for('index') }}" class="nav-logo" style="margin-bottom:.5rem">
+                <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#1a1a2e"/><path d="M7 14L14 7L21 14L14 21L7 14Z" fill="#e8b86d" opacity="0.9"/><circle cx="14" cy="14" r="3" fill="#1a1a2e"/></svg>
+                <span class="logo-name">EventIQ</span>
+            </a>
+            <p class="footer-tagline">Smart event planning for individuals, students &amp; small organisations across Dehradun.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('plan') }}">Plan Event</a>
+            <a href="{{ url_for('index') }}#features">Features</a>
+        </div>
+        <div class="footer-col">
+            <h4>Event Types</h4>
+            <span>Weddings · Corporate</span>
+            <span>College Fests · Birthday</span>
+            <span>Cultural · Sports · Seminar</span>
+        </div>
+        <div class="footer-col">
+            <h4>Coverage</h4>
+            <span>Rajpur Road · Vasant Vihar</span>
+            <span>Mussoorie Road · ISBT</span>
+            <span>Clement Town &amp; 10 more</span>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2024 EventIQ Dehradun · Built for Uttarakhand</span>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
