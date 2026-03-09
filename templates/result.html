@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Your Event Plan — EventIQ Dehradun{% endblock %}
+
+{% block content %}
+
+<div id="resultRoot">
+    <!-- Populated entirely by results-display.js -->
+    <div class="result-loading" id="resultLoading">
+        <div class="loading-spinner"></div>
+        <p>Building your event plan…</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/results-display.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}Plan Your Event — EventIQ Dehradun{% endblock %}
+
+{% block content %}
+
+<section class="plan-hero">
+    <div class="plan-hero-inner">
+        <a href="{{ url_for('index') }}" class="back-link">← Back to Home</a>
+        <h1 class="plan-h1">Plan Your Event</h1>
+        <p class="plan-sub">Fill in your event details and get smart recommendations in seconds.</p>
+    </div>
+</section>
+
+<section class="plan-section">
+    <div class="plan-wrap">
+
+        <!-- ── Left: Form ── -->
+        <div class="plan-form-col">
+            <form id="eventForm" novalidate>
+
+                <!-- Event Identity -->
+                <div class="form-group-block">
+                    <h3 class="form-section-title"><span class="fst-num">01</span> Event Identity</h3>
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="event_name">Event Name <span class="req">*</span></label>
+                            <input type="text" id="event_name" name="event_name"
+                                   placeholder="e.g. Sharma Family Wedding" maxlength="80" required>
+                            <span class="field-err" id="err_event_name"></span>
+                        </div>
+                    </div>
+                    <div class="form-row form-row-2">
+                        <div class="field">
+                            <label for="event_type">Event Type <span class="req">*</span></label>
+                            <div class="select-wrap">
+                                <select id="event_type" name="event_type" required>
+                                    <option value="">— Select type —</option>
+                                    {% for et in event_types %}
+                                    <option value="{{ et }}">{{ et }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <span class="field-err" id="err_event_type"></span>
+                        </div>
+                        <div class="field">
+                            <label for="organizer">Organiser Type</label>
+                            <div class="select-wrap">
+                                <select id="organizer" name="organizer">
+                                    <option value="Individual">Individual</option>
+                                    <option value="Student Group">Student Group</option>
+                                    <option value="Small Organisation">Small Organisation</option>
+                                    <option value="Corporate">Corporate</option>
+                                    <option value="NGO / Trust">NGO / Trust</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location & Timing -->
+                <div class="form-group-block">
+                    <h3 class="form-section-title"><span class="fst-num">02</span> Location &amp; Timing</h3>
+                    <div class="form-row form-row-2">
+                        <div class="field">
+                            <label for="locality">Locality in Dehradun <span class="req">*</span></label>
+                            <div class="select-wrap">
+                                <select id="locality" name="locality" required>
+                                    <option value="">— Choose locality —</option>
+                                    {% for loc in localities %}
+                                    <option value="{{ loc }}">{{ loc }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <span class="field-err" id="err_locality"></span>
+                        </div>
+                        <div class="field">
+                            <label for="month">Event Month <span class="req">*</span></label>
+                            <div class="select-wrap">
+                                <select id="month" name="month" required>
+                                    <option value="">— Select month —</option>
+                                    {% for m in months %}
+                                    <option value="{{ m }}">{{ m }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <span class="field-err" id="err_month"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audience & Scale -->
+                <div class="form-group-block">
+                    <h3 class="form-section-title"><span class="fst-num">03</span> Audience &amp; Scale</h3>
+                    <div class="form-row form-row-2">
+                        <div class="field">
+                            <label for="guests">Expected Guests <span class="req">*</span></label>
+                            <input type="number" id="guests" name="guests"
+                                   placeholder="e.g. 200" min="10" max="5000" required>
+                            <span class="field-err" id="err_guests"></span>
+                        </div>
+                        <div class="field">
+                            <label for="audience">Target Audience <span class="req">*</span></label>
+                            <div class="select-wrap">
+                                <select id="audience" name="audience" required>
+                                    <option value="">— Select audience —</option>
+                                    <option value="Family & Close Guests">Family &amp; Close Guests</option>
+                                    <option value="Students & Youth">Students &amp; Youth</option>
+                                    <option value="Working Professionals">Working Professionals</option>
+                                    <option value="General Public">General Public</option>
+                                    <option value="Corporate Clients">Corporate Clients</option>
+                                    <option value="Community Members">Community Members</option>
+                                </select>
+                            </div>
+                            <span class="field-err" id="err_audience"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget -->
+                <div class="form-group-block">
+                    <h3 class="form-section-title"><span class="fst-num">04</span> Budget</h3>
+                    <div class="form-row">
+                        <div class="field field-budget">
+                            <label for="budget">Total Budget (INR) <span class="req">*</span></label>
+                            <div class="budget-input-wrap">
+                                <span class="currency-symbol">₹</span>
+                                <input type="number" id="budget" name="budget"
+                                       placeholder="e.g. 150000" min="5000" required>
+                            </div>
+                            <span class="field-err" id="err_budget"></span>
+                            <div class="budget-display" id="budgetDisplay"></div>
+                        </div>
+                    </div>
+                    <!-- Budget Range Selector -->
+                    <div class="budget-presets">
+                        <span class="bp-label">Quick select:</span>
+                        <button type="button" class="bp-btn" data-val="25000">₹25K</button>
+                        <button type="button" class="bp-btn" data-val="50000">₹50K</button>
+                        <button type="button" class="bp-btn" data-val="100000">₹1L</button>
+                        <button type="button" class="bp-btn" data-val="250000">₹2.5L</button>
+                        <button type="button" class="bp-btn" data-val="500000">₹5L</button>
+                        <button type="button" class="bp-btn" data-val="1000000">₹10L</button>
+                    </div>
+                </div>
+
+                <div class="form-submit-row">
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <span id="submitText">Analyse My Event →</span>
+                        <span id="submitSpinner" class="spinner hidden"></span>
+                    </button>
+                    <p class="form-note">Free, instant, no signup needed.</p>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- ── Right: Info Sidebar ── -->
+        <aside class="plan-sidebar">
+            <div class="sidebar-card">
+                <h4>🌦️ Seasonal tip</h4>
+                <p id="sidebarSeasonTip">Select a month to see the seasonal weather forecast for Dehradun.</p>
+            </div>
+            <div class="sidebar-card">
+                <h4>💡 What you'll get</h4>
+                <ul class="sidebar-list">
+                    <li>✅ Top venue recommendations</li>
+                    <li>✅ Budget distribution breakdown</li>
+                    <li>✅ Predicted attendance</li>
+                    <li>✅ Risk alerts &amp; mitigations</li>
+                    <li>✅ Local expert tips</li>
+                    <li>✅ Feasibility score</li>
+                </ul>
+            </div>
+            <div class="sidebar-card sidebar-card-event" id="sidebarEventInfo">
+                <h4>📋 Event info</h4>
+                <p>Select an event type to see its recommended budget range and audience profile.</p>
+            </div>
+        </aside>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/form-handler.js') }}"></script>
+{% endblock %}
