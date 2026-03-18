@@ -3,12 +3,12 @@ import joblib
 import random
 
 
-# load trained models
+# loading trained models
 venue_model = joblib.load("D:/EM_38/models/venue_price_model.pkl")
 vendor_model = joblib.load("D:/EM_38/models/vendor_price_model.pkl")
 
 
-# load feature datasets
+# loading feature datasets
 venues = pd.read_csv("D:/EM_38/data/venues_features.csv")
 vendors = pd.read_csv("D:/EM_38/data/vendors_features.csv")
 
@@ -40,7 +40,7 @@ def generate_plan(city, budget):
     )
 
 
-    # compute venue score
+    # computing venue score
     venue_candidates["score"] = (
         venue_candidates["rating"] * 2 -
         venue_candidates["predicted_price"] /
@@ -48,11 +48,11 @@ def generate_plan(city, budget):
     )
 
 
-    # sort venues by score
+    # sorting venues by score
     venue_candidates = venue_candidates.sort_values("score", ascending=False)
 
 
-    # select random venue from top venues
+    # selecting random venue from top venues
     venue = venue_candidates.head(8).sample(1).iloc[0]
 
     venue_cost = venue["predicted_price"]
@@ -66,7 +66,7 @@ def generate_plan(city, budget):
     selected_vendors = []
 
 
-    # select vendors for each category
+    # selecting vendors for each category
     for vtype in vendor_types:
 
         vendor_candidates = vendors[
@@ -78,7 +78,7 @@ def generate_plan(city, budget):
             continue
 
 
-        # predict vendor prices
+        # predicting vendor prices
         vendor_candidates["predicted_price"] = vendor_model.predict(
             vendor_candidates[
             [
@@ -94,7 +94,7 @@ def generate_plan(city, budget):
         )
 
 
-        # compute vendor score
+        # computing vendor score
         vendor_candidates["score"] = (
             vendor_candidates["rating"] * 2 -
             vendor_candidates["predicted_price"] /
@@ -102,17 +102,17 @@ def generate_plan(city, budget):
         )
 
 
-        # sort vendors by score
+        # sorting vendors by score
         vendor_candidates = vendor_candidates.sort_values("score", ascending=False)
 
 
-        # pick random vendor from top options
+        # picking random vendor from top options
         vendor = vendor_candidates.head(5).sample(1).iloc[0]
 
         vendor_cost = vendor["predicted_price"]
 
 
-        # add vendor if budget allows
+        # adding vendor if budget allows
         if vendor_cost <= remaining_budget:
 
             selected_vendors.append(vendor)
@@ -120,7 +120,7 @@ def generate_plan(city, budget):
             remaining_budget -= vendor_cost
 
 
-    # calculate vendor cost
+    # calculating vendor cost
     total_vendor_cost = sum(v["predicted_price"] for v in selected_vendors)
 
     total_cost = venue_cost + total_vendor_cost
