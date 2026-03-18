@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import time
 
-API_KEY = "AIzaSyCvyzjlmHmvIrr1SlN_AZ8tSk5EeUCgAHU"
+API_KEY = abc
 
 # Vendor service categories
 vendor_keywords = [

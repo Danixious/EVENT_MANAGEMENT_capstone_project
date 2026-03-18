@@ -1,3 +1,4 @@
 data/*.csv
 *.csv
 model/event_plan_model.pkl
+Scripts/data_collection.py/API_KEY
