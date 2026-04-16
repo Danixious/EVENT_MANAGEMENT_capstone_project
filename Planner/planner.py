@@ -171,15 +171,16 @@ def optimize_vendors(filtered_vendors, category_budgets, guest_count):
 
         # use base price as total cost
         df["cost"] = df["base_price"]
-
         # safety handling
         df["cost"] = df["cost"].fillna(0)
         df.loc[df["cost"] <= 0, "cost"] = df["base_price"]
 
-        # soft budget filter
-        filtered_df = df[df["cost"] <= budget]
-        if not filtered_df.empty:
-            df = filtered_df
+        df = df[df["cost"] <= budget * 1.2]
+
+        # fallback if everything removed
+        if df.empty:
+            df = filtered_vendors[category].copy()
+            df["cost"] = df["base_price"]
 
         # affordability score
         if budget > 0:
@@ -192,6 +193,7 @@ def optimize_vendors(filtered_vendors, category_budgets, guest_count):
         # distance score
         df["distance_score"] = 1 / (1 + df["distance"])
 
+        #area priority
         df["area_priority"] = df["is_primary_area"].astype(int)
 
         # soft score filter
@@ -208,11 +210,19 @@ def optimize_vendors(filtered_vendors, category_budgets, guest_count):
         0.30 * df["area_priority"]   # NEW
 )
 
-        df = df.sort_values(by="final_score", ascending=False)
-        optimized_vendors[category] = df.head(5)
-        print("DEBUG OPTIMIZED:", df[["name", "base_price", "cost"]].head())
-    return optimized_vendors
+        df["budget_diff"] = abs(df["cost"] - budget)
 
+        # SAFETY CHECK (VERY IMPORTANT)
+        if "final_score" not in df.columns:
+            df["final_score"] = 0
+
+        df = df.sort_values(
+            by=["budget_diff", "final_score"],
+            ascending=[True, False]
+        )
+        optimized_vendors[category] = df.head(5)
+
+    return optimized_vendors
 
 # generate different plans
 def generate_plans(optimized_vendors, min_budget, max_budget):
