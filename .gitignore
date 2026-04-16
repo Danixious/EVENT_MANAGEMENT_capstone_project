@@ -8,3 +8,9 @@ Scripts/
 data/
 data2/
 models/
+node_modules/
+.env
+dist/
+build/
+.vscode/
+.DS_Store
