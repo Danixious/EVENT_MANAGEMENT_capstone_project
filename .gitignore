@@ -5,3 +5,6 @@ Analysis/
 graphs/
 *.png
 Scripts/
+data/
+data2/
+models/
