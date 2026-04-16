@@ -13,14 +13,9 @@ def get_connection():
         print("🚨 TRYING DIRECT CONNECTION...")
 
         conn = psycopg2.connect(
-            dbname="postgres",
-            user="postgres",
-            password="1Dani@2318",
-            host="db.gcsqfgmrmskmleazdsze.supabase.co",
-            port="5432",
-            sslmode="require",
-            connect_timeout=10
-        )
+        "postgresql://postgres.gcsqfgmrmskmleazdsze:1Dani%402318@aws-1-ap-south-1.pooler.supabase.com:6543/postgres",
+        sslmode="require"
+)
 
         print("✅ CONNECTION SUCCESS")
         return conn
