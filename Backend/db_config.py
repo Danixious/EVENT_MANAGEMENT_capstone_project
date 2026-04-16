@@ -12,7 +12,14 @@ def get_connection():
     print("🚨 DEBUG DATABASE_URL:", DATABASE_URL)
 
     try:
-        conn = psycopg2.connect(DATABASE_URL)
+        conn = psycopg2.connect(
+        dbname="postgres",
+        user="postgres",
+        password="1Dani@2318",
+        host="db.gcsqfgmrmskmleazdsze.supabase.co",
+        port="5432",
+        sslmode="require"
+)
         print("✅ DB CONNECTED")
         return conn
     except Exception as e:
