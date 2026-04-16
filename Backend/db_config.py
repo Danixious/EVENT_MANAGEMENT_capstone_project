@@ -34,3 +34,5 @@ if __name__ == "__main__":
 
     else:
         print("❌ Failed to connect to database.")
+
+    print("DEBUG DB URL:", DATABASE_URL)
