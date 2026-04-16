@@ -9,8 +9,11 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def get_connection():
+    print("🚨 DEBUG DATABASE_URL:", DATABASE_URL)
+
     try:
         conn = psycopg2.connect(DATABASE_URL)
+        print("✅ DB CONNECTED")
         return conn
     except Exception as e:
         print("❌ Connection Error:", e)
