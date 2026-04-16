@@ -2,26 +2,20 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-
 def get_connection():
     try:
-        print("🚨 TRYING DIRECT CONNECTION...")
+        print("🚀 Connecting to Supabase via Pooler...")
 
         conn = psycopg2.connect(
-        "postgresql://postgres.gcsqfgmrmskmleazdsze:1Dani%402318@aws-1-ap-south-1.pooler.supabase.com:6543/postgres",
-        sslmode="require"
-)
+            "postgresql://postgres.gcsqfgmrmskmleazdsze:icggFhCibEvJQtOQ@aws-1-ap-south-1.pooler.supabase.com:6543/postgres",
+            sslmode="require"
+        )
 
-        print("✅ CONNECTION SUCCESS")
+        print("✅ Connected to Supabase!")
         return conn
 
     except Exception as e:
-        print("❌ FULL ERROR:", repr(e))
+        print("❌ Connection Error:", repr(e))
         return None
 
 
@@ -43,4 +37,3 @@ if __name__ == "__main__":
     else:
         print("❌ Failed to connect to database.")
 
-    print("DEBUG DB URL:", DATABASE_URL)
