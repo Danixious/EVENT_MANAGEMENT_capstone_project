@@ -1,8 +1,5 @@
 -- Reset database
 DROP DATABASE IF EXISTS event_management;
-CREATE DATABASE event_management;
-
-\c event_management;
 
 -- USERS
 CREATE TABLE users (
