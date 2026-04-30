@@ -3,21 +3,16 @@ import os
 import pandas as pd
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from Backend.db_config import get_connection
 from Backend.queries import FETCH_VENDORS_QUERY
 from Backend import queries
 from Planner.planner import run_event_planner, load_model
 
-# -------------------------------
-# 🔥 LOAD MODEL (portable)
-# -------------------------------
+# LOAD MODEL
 MODEL_PATH = os.path.join("models", "vendor_recommendation_model.pkl")
 model = load_model(MODEL_PATH)
 
-# -------------------------------
-# 📍 Nearby Area Mapping
-# -------------------------------
+#  Nearby Area Mapping
 nearby_map = {
     "rajpur road": ["ballupur", "dalanwala", "clement town"],
     "ballupur": ["rajpur road", "isbt area"],
@@ -25,9 +20,7 @@ nearby_map = {
     "isbt area": ["ballupur", "rajpur road"],
 }
 
-# -------------------------------
-# 🎯 SERVICE NORMALIZATION
-# -------------------------------
+#  SERVICE NORMALIZATION
 SERVICE_MAP = {
     "party hall": "banquet hall",
     "dj": "dj service",
@@ -52,9 +45,7 @@ def normalize_services(services):
 
     return list(set(normalized))  # remove duplicates
 
-# -------------------------------
-# 🧠 FETCH FILTERED VENDORS
-# -------------------------------
+#  FETCH FILTERED VENDORS
 def get_filtered_vendors(locality, services, guest_count, month):
 
     conn = get_connection()
@@ -66,7 +57,7 @@ def get_filtered_vendors(locality, services, guest_count, month):
     try:
         # Normalize inputs
         locality = locality.lower()
-        services = normalize_services(services)
+        services = [s.lower() for s in normalize_services(services)]
 
         # Include nearby areas
         locality_list = [locality]
@@ -78,9 +69,9 @@ def get_filtered_vendors(locality, services, guest_count, month):
             FETCH_VENDORS_QUERY,
             (
                 guest_count,     # for dynamic pricing
+                services,
                 services,        # search_keyword
                 locality_list,   # search_area
-                guest_count,     # capacity filter
                 200              # limit
             )
         )
@@ -90,13 +81,17 @@ def get_filtered_vendors(locality, services, guest_count, month):
 
         df = pd.DataFrame(rows, columns=columns)
 
+        df["category"] = df["category"].astype(str).str.strip().str.lower()
+        df["search_keyword"] = df["search_keyword"].astype(str).str.strip().str.lower()
+
+        VENUE_TYPES = ["banquet hall", "hotel banquet hall", "party hall", "wedding lawn", "wedding resort"]
+
+
         if df.empty:
             print("⚠️ No vendors found after filtering")
             return df
 
-        # -----------------------------
-        # 🔧 DATA CLEANING
-        # -----------------------------
+        #  DATA CLEANING
         numeric_cols = ["base_price", "capacity", "rating", "latitude", "longitude"]
         for col in numeric_cols:
             if col in df.columns:
@@ -109,18 +104,15 @@ def get_filtered_vendors(locality, services, guest_count, month):
         # Planner required
         df["is_primary_area"] = df["locality"].str.lower() == locality
 
-        if "search_keyword" not in df.columns:
-            df["search_keyword"] = df["service_type"]
-
         # Debug logs
-        print("\n✅ Vendors fetched:", len(df))
-        print("📍 Areas:", df["locality"].value_counts().to_dict())
+        print("\n Vendors fetched:", len(df))
+        print(" Areas:", df["locality"].value_counts().to_dict())
         print("🛠 Services:", df["search_keyword"].value_counts().to_dict())
 
         return df
 
     except Exception as e:
-        print("❌ Error in get_filtered_vendors:", e)
+        print(" Error in get_filtered_vendors:", e)
         return pd.DataFrame()
 
     finally:
@@ -128,9 +120,7 @@ def get_filtered_vendors(locality, services, guest_count, month):
         conn.close()
 
 
-# -------------------------------
-# 📝 STORE EVENT
-# -------------------------------
+#  STORE EVENT
 def store_event(user_id, event_type, event_date, guest_count, min_budget, max_budget):
 
     conn = get_connection()
@@ -150,9 +140,7 @@ def store_event(user_id, event_type, event_date, guest_count, min_budget, max_bu
         conn.close()
 
 
-# -------------------------------
-# 📊 STORE PLANS
-# -------------------------------
+#  STORE PLANS
 def store_plans(event_id, plans):
 
     conn = get_connection()
@@ -200,9 +188,7 @@ def store_plans(event_id, plans):
         conn.close()
 
 
-# -------------------------------
-# 🚀 MAIN PIPELINE
-# -------------------------------
+#  MAIN PIPELINE
 from datetime import datetime
 def generate_event_plan(input_data):
     event_date_obj = datetime.strptime(input_data.event_date, "%Y-%m-%d")
@@ -248,15 +234,18 @@ def generate_event_plan(input_data):
 
     stored_plans = store_plans(event_id, plans)
 
+    overall_status = "success"
+
+    if any(p.get["status"] == "adjusted_plan" for p in plans):
+        overall_status = "adjusted_plan"
+
     return {
-    "status": "success",
-    "event_id": event_id,
-    "plans": plans
+        "status": overall_status,
+        "event_id": event_id,
+        "plans": plans
 }
 
-# -------------------------------
-# 🧾 FORMAT PLANS
-# -------------------------------
+#  FORMAT PLANS
 def format_plans(plans, min_budget, max_budget):
 
     formatted = []
@@ -301,13 +290,29 @@ def format_plans(plans, min_budget, max_budget):
 
             total_cost += float(cost)
             vendors_list.append(vendor_data)
-            remaining = max_budget - total_cost
+        remaining = max_budget - total_cost
+
+        # budget check
+        if total_cost > max_budget:
+            status = "adjusted_plan"
+            message = "⚠️ Budget too low. Showing closest possible plan."
+            budget_gap = total_cost - max_budget
+        else:
+            status = "success"
+            message = "Plan within budget."
+            budget_gap = 0
+        
+        if total_cost < max_budget * 0.6:
+            message = "⚠️ Budget exceeds available vendor pricing. Showing best possible plan."
 
         formatted.append({
-            "plan_type":plan_type.replace("_plan", ""),
+            "plan_type": plan_type.replace("_plan", ""),
             "vendors": vendors_list,
             "total_cost": total_cost,
-            "remaining_budget": max(0,remaining),
+            "remaining_budget": max(0, remaining),
+            "budget_gap": budget_gap,
+            "status": status,
+            "message": message,
             "optimization_score": 0
         })
 
