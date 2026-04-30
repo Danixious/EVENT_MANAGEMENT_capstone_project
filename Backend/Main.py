@@ -236,7 +236,7 @@ def generate_event_plan(input_data):
 
     overall_status = "success"
 
-    if any(p.get["status"] == "adjusted_plan" for p in plans):
+    if any(p.get("status") == "adjusted_plan" for p in plans):
         overall_status = "adjusted_plan"
 
     return {
