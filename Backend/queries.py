@@ -4,7 +4,7 @@ FETCH_VENDORS_QUERY = """
 SELECT 
     v.place_id AS vendor_id,
     v.name,
-    v.category AS service_type,
+    v.category AS category,
     v.search_area AS locality,
     
     -- Dynamic price calculation
@@ -22,9 +22,11 @@ SELECT
     v.website
 FROM vendors v
 WHERE 
-    LOWER(v.search_keyword) = ANY(%s)
-    AND LOWER(v.search_area) = ANY(%s)
-    AND v.capacity >= %s
+    (
+        LOWER(TRIM(v.category)) = ANY(%s)
+        OR LOWER(TRIM(v.search_keyword)) = ANY(%s)
+    )
+    AND LOWER(TRIM(v.search_area)) = ANY(%s)
 LIMIT %s;
 """
 
